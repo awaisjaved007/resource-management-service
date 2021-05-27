@@ -122,7 +122,7 @@ public class ResourceManagementConfig extends AcceptHeaderLocaleResolver
   @Bean
   JedisConnectionFactory jedisConnectionFactory() {
     RedisStandaloneConfiguration redisStandaloneConfiguration =
-        new RedisStandaloneConfiguration(redisHost,redisPort);
+        new RedisStandaloneConfiguration(redisHost);
     return new JedisConnectionFactory(redisStandaloneConfiguration);
   }
 
