@@ -1,7 +1,7 @@
 #Assumptions:
 
 ##Taking unique name as input for catererInputModel.
-
+#Pre-Requsites are :  Docker, Minikube, JDK
 ## How to run
 
 #### clone the project.
@@ -22,7 +22,17 @@ eval $(minikube docker-env)
 
 docker build -t assignment/resource-management:1.0.0 .
 
+kubectl create -f ./k8/redis/
+kubectl create -f ./k8/kafka/
+kubectl create -f ./k8/mongodb/
 
+Now check once all deployments are running properly Then run following command to created the deployment of application.
+
+kubectl create -f ./k8/resource-management/
+
+###Swagger file is placed in resources folder.
+
+To access 
 
 
 
