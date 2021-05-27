@@ -12,6 +12,8 @@ Copy application.properties file from resources folder and place at following pa
 
 #### Run following commands
 
+mvn package
+
 Once image is created then we have to run locally through kubernetes.
 
 To run the image with minikube run following command
