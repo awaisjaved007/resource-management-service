@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rms
+  labels:
+    name: rms
+    app: resource-management
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: rms-pod
+      app: resource-management
+  template:
+    metadata:
+      labels:
+        name: rms-pod
+        app: resource-management
+    spec:
+      containers:
+        - name: rms
+          image: assignment/resource-management:1.0.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8013
+          env:
+            - name: SPRING_PROFILE
+              value: dev
+          volumeMounts:
+            - name: resource-management-config
+              mountPath: /opt/company/conf/resource-management
+      volumes:
+        - name: resource-management-config
+          configMap:
+            name: rms-config
+            items:
+              - key: application.properties
+                path: application.properties
