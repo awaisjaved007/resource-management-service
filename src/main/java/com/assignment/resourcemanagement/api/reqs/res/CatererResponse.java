@@ -1,5 +1,9 @@
 package com.assignment.resourcemanagement.api.reqs.res;
 
-public class CatererResponse
+import com.assignment.resourcemanagement.boundaries.PersistedCaterer;
+import org.springframework.hateoas.RepresentationModel;
+
+public class CatererResponse extends RepresentationModel
 {
+	PersistedCaterer persistedCaterer;
 }

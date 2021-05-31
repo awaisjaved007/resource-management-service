@@ -1,4 +1,4 @@
-package com.assignment.resourcemanagement.domain;
+package com.assignment.resourcemanagement.mongo.docs;
 
 import com.assignment.resourcemanagement.boundaries.Capacity;
 import lombok.Data;

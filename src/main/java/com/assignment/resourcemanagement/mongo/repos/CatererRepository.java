@@ -1,6 +1,6 @@
-package com.assignment.resourcemanagement.repository;
+package com.assignment.resourcemanagement.mongo.repos;
 
-import com.assignment.resourcemanagement.domain.CatererDocument;
+import com.assignment.resourcemanagement.mongo.docs.CatererDocument;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;

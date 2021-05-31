@@ -1,9 +1,10 @@
-package com.assignment.resourcemanagement.handler;
+package com.assignment.resourcemanagement.interactors;
 
 import com.assignment.resourcemanagement.boundaries.Caterer;
-import com.assignment.resourcemanagement.mongo.docs.CatererDocument;
-import com.assignment.resourcemanagement.exception.NotFoundException;
+import com.assignment.resourcemanagement.boundaries.CatererInteractor;
 import com.assignment.resourcemanagement.broker.MessageBroker;
+import com.assignment.resourcemanagement.exception.NotFoundException;
+import com.assignment.resourcemanagement.mongo.docs.CatererDocument;
 import com.assignment.resourcemanagement.mongo.repos.CatererRepository;
 import com.assignment.resourcemanagement.transformer.CatererTransformer;
 import org.slf4j.Logger;
@@ -18,14 +19,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CatererHandlerImpl implements CatererHandler {
+public class CatererInteractorImpl implements CatererInteractor
+{
 
-  private Logger LOGGER = LoggerFactory.getLogger(CatererHandlerImpl.class);
+  private Logger LOGGER = LoggerFactory.getLogger(CatererInteractorImpl.class);
   private final CatererRepository catererRepository;
   private final MessageBroker messageBroker;
 
   @Autowired
-  public CatererHandlerImpl(final CatererRepository catererRepository,
+  public CatererInteractorImpl(final CatererRepository catererRepository,
           final MessageBroker messageBroker) {
     this.catererRepository = catererRepository;
     this.messageBroker = messageBroker;

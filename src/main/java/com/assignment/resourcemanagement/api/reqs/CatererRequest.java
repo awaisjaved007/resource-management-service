@@ -1,5 +1,9 @@
-package com.assignment.resourcemanagement.model;
+package com.assignment.resourcemanagement.api.reqs;
 
+import com.assignment.resourcemanagement.boundaries.Address;
+import com.assignment.resourcemanagement.boundaries.Capacity;
+import com.assignment.resourcemanagement.boundaries.Caterer;
+import com.assignment.resourcemanagement.boundaries.Contact;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -13,7 +17,8 @@ import javax.validation.constraints.Size;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CatererRequest implements Caterer {
+public class CatererRequest implements Caterer
+{
 
   @Size(min = 1, max = 255, message = "message.request.body.name.length")
   @NotNull(message = "message.request.body.name.not.null")
@@ -30,7 +35,8 @@ public class CatererRequest implements Caterer {
 
   @Data
   @JsonIgnoreProperties(ignoreUnknown = true)
-  public static class CapacityModel implements Capacity {
+  public static class CapacityModel implements Capacity
+  {
 
     @NotNull(message = "message.request.body.capacityDocument.minGuests.not.null")
     @Positive(message = "message.request.body.capacityDocument.minGuests.min.value")
@@ -48,7 +54,8 @@ public class CatererRequest implements Caterer {
 
   @Data
   @JsonIgnoreProperties(ignoreUnknown = true)
-  public static class ContactModel implements Contact {
+  public static class ContactModel implements Contact
+  {
     private String phoneNumber;
 
     @Size(
@@ -82,7 +89,8 @@ public class CatererRequest implements Caterer {
 
   @Data
   @JsonIgnoreProperties(ignoreUnknown = true)
-  public static class AddressImpl implements Address {
+  public static class AddressImpl implements Address
+  {
 
     @NotNull(message = "message.request.body.location.cityName.not.null")
     @Size(min = 1, max = 255, message = "message.request.body.location.cityName.length")

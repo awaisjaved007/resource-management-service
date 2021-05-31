@@ -1,19 +1,15 @@
 package com.assignment.resourcemanagement.controller;
 
-import com.assignment.resourcemanagement.exception.InvalidDataException;
-import com.assignment.resourcemanagement.handler.CatererHandler;
-import com.assignment.resourcemanagement.model.CatererListResponseModel;
-import com.assignment.resourcemanagement.model.CatererRequestModel;
-import com.assignment.resourcemanagement.model.CatererResponseModel;
-import com.assignment.resourcemanagement.model.ResponseModel;
+import com.assignment.resourcemanagement.boundaries.CatererInteractor;
+import com.assignment.resourcemanagement.api.reqs.CatererRequest;
+import com.assignment.resourcemanagement.boundaries.PersistedCaterer;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,57 +19,50 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
 
 @Api(value = "REST APIs for Caterers")
-@Validated
 @RestController
-@RequestMapping("/caterer")
+@RequestMapping(value = "/caterer", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CatererController {
 
-  private final String mediaTypeVersion = "application/json";
-
-  private final CatererHandler catererHandler;
+  private final CatererInteractor catererInteractor;
 
   @Value("${caterer.get.city.name.api.page.size.default:10}")
   private int defaultPageSize;
 
   @Autowired
-  public CatererController(CatererHandler catererHandler) {
-    this.catererHandler = catererHandler;
+  public CatererController(CatererInteractor catererInteractor) {
+    this.catererInteractor = catererInteractor;
   }
 
-  @PostMapping(produces = mediaTypeVersion)
-  public ResponseEntity<ResponseModel> saveCaterer(
-      @RequestBody @Valid CatererRequestModel catererModel) {
+  @PostMapping
+  public ResponseEntity<?> saveCaterer(@RequestBody @Valid CatererRequest caterer) {
 
-    ResponseModel responseModel = this.catererHandler.save(catererModel);
+    catererInteractor.save(caterer);
 
-    return ResponseEntity.status(HttpStatus.CREATED).body(responseModel);
+    return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
-  @GetMapping(value = "{nameOrId}", produces = mediaTypeVersion)
-  public ResponseEntity<CatererResponseModel> getCatererByNameOrId(@PathVariable String nameOrId) {
+  @GetMapping(value = "{id}")
+  public ResponseEntity<PersistedCaterer> getCatererByNameOrId(@PathVariable String id) {
 
-    CatererResponseModel responseModel = this.catererHandler.getCatererByNameOrId(nameOrId);
+    PersistedCaterer persistedCaterer = catererInteractor.getCatererById(id);
 
-    return ResponseEntity.status(HttpStatus.OK).body(responseModel);
+    return ResponseEntity.status(HttpStatus.OK).body(persistedCaterer);
   }
 
-  @GetMapping(value = "all/{cityName}", produces = mediaTypeVersion)
-  public ResponseEntity<CatererListResponseModel> getCaterersListByCityName(
+  @GetMapping(value = "all/{cityName}")
+  public ResponseEntity<Page<? extends PersistedCaterer>> getCaterersListByCityName(
       @PathVariable String cityName,
-      @RequestParam(value = "page") int page,
-      @RequestParam(value = "size", required = false, defaultValue = "0") Integer size) {
+      @RequestParam(value = "page") @Positive(message = "page.number.is.invalid") int page,
+      @RequestParam(value = "size", required = false, defaultValue = "5")
+          @Positive(message = "page.size.is.invalid")
+          Integer size) {
 
-    if (page < 1) {
-      throw new InvalidDataException("page.number.is.invalid");
-    }
-    if (size != null && size < 0) {
-      throw new InvalidDataException("page.size.is.invalid");
-    }
-    Pageable paging = PageRequest.of(page - 1, size == null || size == 0 ? defaultPageSize : size);
-    ResponseModel responseModel = this.catererHandler.getCaterersByCityName(cityName, paging);
+    Page<? extends PersistedCaterer> responseModel =
+        catererInteractor.getCaterersByCityName(cityName, page, size);
 
-    return ResponseEntity.ok((CatererListResponseModel) responseModel);
+    return ResponseEntity.ok(responseModel);
   }
 }

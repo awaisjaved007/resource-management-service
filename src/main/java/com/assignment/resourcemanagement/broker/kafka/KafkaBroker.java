@@ -1,5 +1,6 @@
-package com.assignment.resourcemanagement.broker;
+package com.assignment.resourcemanagement.broker.kafka;
 
+import com.assignment.resourcemanagement.broker.MessageBroker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,8 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 @Component
-public class KafkaBroker implements MessageBroker {
+public class KafkaBroker implements MessageBroker
+{
 
   private static final Logger LGR = LoggerFactory.getLogger(KafkaBroker.class);
 

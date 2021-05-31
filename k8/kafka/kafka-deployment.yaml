@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: kafka-service
+  name: broker-service
   namespace: default
   labels:
     app: kafka-service
@@ -9,21 +9,21 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: kafka-service
+      app: broker-service
   template:
     metadata:
       labels:
         name: kafka-service
         app: kafka-service
     spec:
-      hostname: kafka-service
+      hostname: broker-service
       containers:
-        - name: kafka-service
-          image: wurstmeister/kafka:latest
+        - name: broker-service
+          image: wurstmeister/broker:latest
           imagePullPolicy: IfNotPresent
           env:
             - name: KAFKA_ADVERTISED_LISTENERS
-              value: PLAINTEXT://kafka-service:9092
+              value: PLAINTEXT://broker-service:9092
             - name: KAFKA_ZOOKEEPER_CONNECT
               value: zookeeper-cluster1:2181
             - name: KAFKA_LISTENERS
