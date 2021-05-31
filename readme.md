@@ -30,6 +30,8 @@ Now check once all deployments are running properly Then run following command t
 
 kubectl create -f ./k8/resource-management/
 
+To access swagger ui:   http://{Place ip of rms-service}:30008/resource-management/v1/swagger-ui.html
+
 ###Swagger file is placed in resources folder.
 
 To access 
