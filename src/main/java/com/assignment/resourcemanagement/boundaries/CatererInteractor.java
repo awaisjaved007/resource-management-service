@@ -1,10 +1,11 @@
 package com.assignment.resourcemanagement.boundaries;
 
+import com.assignment.resourcemanagement.mongo.docs.CatererDocument;
 import org.springframework.data.domain.Page;
 
 public interface CatererInteractor {
 
-  void save(Caterer catererModel);
+  CatererDocument save(Caterer catererModel);
 
   Page<? extends PersistedCaterer> getCaterersByCityName(String cityName, int page, int size);
 

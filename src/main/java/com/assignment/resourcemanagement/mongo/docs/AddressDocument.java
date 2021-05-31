@@ -10,4 +10,10 @@ public class AddressDocument implements Address {
   private String street;
 
   private String postalCode;
+
+  @Override
+  public String toString()
+  {
+    return "AddressDocument{" + "city='" + city + '\'' + ", street='" + street + '\'' + ", postalCode='" + postalCode + '\'' + '}';
+  }
 }

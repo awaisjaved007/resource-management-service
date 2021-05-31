@@ -66,4 +66,11 @@ public class CatererDocument implements PersistedCaterer {
   public void setContact(ContactDocument contact) {
     this.contact = contact;
   }
+
+  @Override
+  public String toString()
+  {
+    return "CatererDocument{" + "id='" + id + '\'' + ", name='" + name + '\'' + ", address=" + address + ", capacity=" + capacity
+            + ", contact=" + contact + '}';
+  }
 }

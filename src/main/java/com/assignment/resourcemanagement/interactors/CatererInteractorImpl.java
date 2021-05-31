@@ -2,6 +2,7 @@ package com.assignment.resourcemanagement.interactors;
 
 import com.assignment.resourcemanagement.boundaries.Caterer;
 import com.assignment.resourcemanagement.boundaries.CatererInteractor;
+import com.assignment.resourcemanagement.boundaries.PersistedCaterer;
 import com.assignment.resourcemanagement.broker.MessageBroker;
 import com.assignment.resourcemanagement.exception.InvalidDataException;
 import com.assignment.resourcemanagement.exception.NotFoundException;
@@ -41,15 +42,17 @@ public class CatererInteractorImpl implements CatererInteractor {
 
   @Override
   @Caching(put = {@CachePut({"caterer"})})
-  public void save(Caterer catererVO) {
+  public CatererDocument save(Caterer catererVO) {
 
     validateCaterer(catererVO);
 
     CatererDocument catererDocument = CatererTransformer.toEntity(catererVO);
 
-    catererDocument = catererRepository.save(catererDocument);
+    CatererDocument persistedCaterer = this.catererRepository.save(catererDocument);
 
-    this.messageBroker.send("new-catererDocument", catererDocument);
+    this.messageBroker.send("new-catererDocument", persistedCaterer);
+
+    return persistedCaterer;
   }
 
   @Override
