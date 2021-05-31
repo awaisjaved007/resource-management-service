@@ -5,4 +5,4 @@ RUN mv *.jar startup.jar
 RUN mkdir -p /opt/company/conf/resource-management
 VOLUME /var/company/log/resource-management
 VOLUME /opt/company/conf/resource-management
-ENTRYPOINT ["java", "-jar", "startup.jar", "--spring.config.addressDocument=/opt/company/conf/resource-management/application.properties"]
+ENTRYPOINT ["java", "-jar", "startup.jar", "--spring.config.location=/opt/company/conf/resource-management/application.properties"]
