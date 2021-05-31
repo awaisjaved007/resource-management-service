@@ -7,7 +7,7 @@ host: '192.168.39.74:30008'
 basePath: /resource-management/v1
 tags:
   - name: caterer-controller
-    description: CatererDocument Controller
+    description: Caterer Controller
 produces:
   - application/json
 paths:
@@ -23,8 +23,8 @@ paths:
         - application/json
       parameters:
         - in: body
-          name: catererModel
-          description: catererModel
+          name: caterer
+          description: caterer
           required: true
           schema:
             $ref: '#/definitions/CatererRequest'
@@ -32,7 +32,7 @@ paths:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/ResponseModel'
+            type: object
         '201':
           description: Created
         '401':
@@ -67,13 +67,13 @@ paths:
           description: size
           required: false
           type: integer
-          default: 0
+          default: 5
           format: int32
       responses:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/CatererListResponseModel'
+            $ref: '#/definitions/Page'
         '401':
           description: Unauthorized
         '403':
@@ -81,25 +81,25 @@ paths:
         '404':
           description: Not Found
       deprecated: false
-  '/caterer/{nameOrId}':
+  '/caterer/{name}':
     get:
       tags:
         - caterer-controller
-      summary: getCatererByNameOrId
-      operationId: getCatererByNameOrIdUsingGET
+      summary: getCatererById
+      operationId: getCatererByIdUsingGET
       produces:
         - application/json
       parameters:
-        - name: nameOrId
+        - name: name
           in: path
-          description: nameOrId
+          description: name
           required: true
           type: string
       responses:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/CatererResponseModel'
+            $ref: '#/definitions/PersistedCaterer'
         '401':
           description: Unauthorized
         '403':
@@ -108,6 +108,36 @@ paths:
           description: Not Found
       deprecated: false
 definitions:
+  Address:
+    type: object
+    properties:
+      city:
+        type: string
+      postalCode:
+        type: string
+      street:
+        type: string
+    title: Address
+  AddressImpl:
+    type: object
+    properties:
+      city:
+        type: string
+      postalCode:
+        type: string
+      street:
+        type: string
+    title: AddressImpl
+  Capacity:
+    type: object
+    properties:
+      maxGuests:
+        type: integer
+        format: int32
+      minGuests:
+        type: integer
+        format: int32
+    title: Capacity
   CapacityModel:
     type: object
     properties:
@@ -118,76 +148,38 @@ definitions:
         type: integer
         format: int32
     title: CapacityModel
-  CatererListResponseModel:
+  CatererRequest:
     type: object
     properties:
-      caterers:
-        $ref: '#/definitions/Page'
-      resultDescription:
-        type: string
-    title: CatererListResponseModel
-  CatererModel:
-    type: object
-    properties:
+      address:
+        $ref: '#/definitions/AddressImpl'
       capacity:
         $ref: '#/definitions/CapacityModel'
       contact:
         $ref: '#/definitions/ContactModel'
-      id:
-        type: string
-      links:
-        $ref: '#/definitions/Links'
-      location:
-        $ref: '#/definitions/AddressImpl'
-      name:
-        type: string
-    title: CatererModel
-  CatererRequestModel:
-    type: object
-    properties:
-      capacity:
-        $ref: '#/definitions/CapacityModel'
-      contact:
-        $ref: '#/definitions/ContactModel'
-      location:
-        $ref: '#/definitions/AddressImpl'
       name:
         type: string
     title: CatererRequest
-  CatererResponseModel:
+  Contact:
     type: object
     properties:
-      caterer:
-        $ref: '#/definitions/CatererModel'
-      resultDescription:
+      email:
         type: string
-    title: CatererResponseModel
+      mobileNumber:
+        type: string
+      phoneNumber:
+        type: string
+    title: Contact
   ContactModel:
     type: object
     properties:
-      emailAddress:
+      email:
         type: string
       mobileNumber:
         type: string
       phoneNumber:
         type: string
     title: ContactModel
-  Links:
-    type: object
-    properties:
-      empty:
-        type: boolean
-    title: Links
-  LocationModel:
-    type: object
-    properties:
-      cityName:
-        type: string
-      postalCode:
-        type: string
-      streetNameNumber:
-        type: string
-    title: AddressImpl
   Pageable:
     type: object
     properties:
@@ -213,7 +205,7 @@ definitions:
       content:
         type: array
         items:
-          $ref: '#/definitions/CatererModel'
+          $ref: '#/definitions/PersistedCaterer'
       empty:
         type: boolean
       first:
@@ -239,13 +231,21 @@ definitions:
       totalPages:
         type: integer
         format: int32
-    title: Page«CatererModel»
-  ResponseModel:
+    title: Page«PersistedCaterer»
+  PersistedCaterer:
     type: object
     properties:
-      resultDescription:
+      address:
+        $ref: '#/definitions/Address'
+      capacity:
+        $ref: '#/definitions/Capacity'
+      contact:
+        $ref: '#/definitions/Contact'
+      id:
         type: string
-    title: ResponseModel
+      name:
+        type: string
+    title: PersistedCaterer
   Sort:
     type: object
     properties:
