@@ -1,13 +1,15 @@
-openapi: 3.0.1
+swagger: '2.0'
 info:
-  title: Resource Management System API
   description: Documentation RMS API v1
-  version: "1"
-servers:
-  - url: http://localhost:8012/resource-management/v1
+  version: '1'
+  title: Resource Management System API
+host: '192.168.39.74:30008'
+basePath: /resource-management/v1
 tags:
   - name: caterer-controller
     description: Caterer Controller
+produces:
+  - application/json
 paths:
   /caterer:
     post:
@@ -15,255 +17,242 @@ paths:
         - caterer-controller
       summary: saveCaterer
       operationId: saveCatererUsingPOST
-      requestBody:
-        description: catererModel
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CatererRequestModel'
-        required: true
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: catererModel
+          description: catererModel
+          required: true
+          schema:
+            $ref: '#/definitions/CatererRequestModel'
       responses:
-        200:
+        '200':
           description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ResponseModel'
-        201:
+          schema:
+            $ref: '#/definitions/ResponseModel'
+        '201':
           description: Created
-          content: {}
-        401:
+        '401':
           description: Unauthorized
-          content: {}
-        403:
+        '403':
           description: Forbidden
-          content: {}
-        404:
+        '404':
           description: Not Found
-          content: {}
       deprecated: false
-      x-codegen-request-body-name: catererModel
-  /caterer/all/{cityName}:
+  '/caterer/all/{cityName}':
     get:
       tags:
         - caterer-controller
       summary: getCaterersListByCityName
       operationId: getCaterersListByCityNameUsingGET
+      produces:
+        - application/json
       parameters:
         - name: cityName
           in: path
           description: cityName
           required: true
-          schema:
-            type: string
+          type: string
         - name: page
           in: query
           description: page
           required: true
-          schema:
-            type: integer
-            format: int32
+          type: integer
+          format: int32
         - name: size
           in: query
           description: size
-          required: true
-          schema:
-            type: integer
-            format: int32
+          required: false
+          type: integer
+          default: 0
+          format: int32
       responses:
-        200:
+        '200':
           description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CatererListResponseModel'
-        401:
+          schema:
+            $ref: '#/definitions/CatererListResponseModel'
+        '401':
           description: Unauthorized
-          content: {}
-        403:
+        '403':
           description: Forbidden
-          content: {}
-        404:
+        '404':
           description: Not Found
-          content: {}
       deprecated: false
-  /caterer/{nameOrId}:
+  '/caterer/{nameOrId}':
     get:
       tags:
         - caterer-controller
       summary: getCatererByNameOrId
       operationId: getCatererByNameOrIdUsingGET
+      produces:
+        - application/json
       parameters:
         - name: nameOrId
           in: path
           description: nameOrId
           required: true
-          schema:
-            type: string
+          type: string
       responses:
-        200:
+        '200':
           description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CatererResponseModel'
-        401:
+          schema:
+            $ref: '#/definitions/CatererResponseModel'
+        '401':
           description: Unauthorized
-          content: {}
-        403:
+        '403':
           description: Forbidden
-          content: {}
-        404:
+        '404':
           description: Not Found
-          content: {}
       deprecated: false
-components:
-  schemas:
-    CapacityModel:
-      title: CapacityModel
-      type: object
-      properties:
-        maxGuests:
-          type: integer
-          format: int32
-        minGuests:
-          type: integer
-          format: int32
-    CatererListResponseModel:
-      title: CatererListResponseModel
-      type: object
-      properties:
-        caterers:
-          $ref: '#/components/schemas/Page'
-        resultDescription:
-          type: string
-    CatererModel:
-      title: CatererModel
-      type: object
-      properties:
-        capacity:
-          $ref: '#/components/schemas/CapacityModel'
-        contact:
-          $ref: '#/components/schemas/ContactModel'
-        id:
-          type: string
-        links:
-          $ref: '#/components/schemas/Links'
-        location:
-          $ref: '#/components/schemas/LocationModel'
-        name:
-          type: string
-    CatererRequestModel:
-      title: CatererRequestModel
-      type: object
-      properties:
-        capacity:
-          $ref: '#/components/schemas/CapacityModel'
-        contact:
-          $ref: '#/components/schemas/ContactModel'
-        location:
-          $ref: '#/components/schemas/LocationModel'
-        name:
-          type: string
-    CatererResponseModel:
-      title: CatererResponseModel
-      type: object
-      properties:
-        caterer:
-          $ref: '#/components/schemas/CatererModel'
-        resultDescription:
-          type: string
-    ContactModel:
-      title: ContactModel
-      type: object
-      properties:
-        emailAddress:
-          type: string
-        mobileNumber:
-          type: string
-        phoneNumber:
-          type: string
-    Links:
-      title: Links
-      type: object
-      properties:
-        empty:
-          type: boolean
-    LocationModel:
-      title: LocationModel
-      type: object
-      properties:
-        cityName:
-          type: string
-        postalCode:
-          type: string
-        streetNameNumber:
-          type: string
-    Pageable:
-      title: Pageable
-      type: object
-      properties:
-        offset:
-          type: integer
-          format: int64
-        pageNumber:
-          type: integer
-          format: int32
-        pageSize:
-          type: integer
-          format: int32
-        paged:
-          type: boolean
-        sort:
-          $ref: '#/components/schemas/Sort'
-        unpaged:
-          type: boolean
-    Page:
-      title: Page«CatererModel»
-      type: object
-      properties:
-        content:
-          type: array
-          items:
-            $ref: '#/components/schemas/CatererModel'
-        empty:
-          type: boolean
-        first:
-          type: boolean
-        last:
-          type: boolean
-        number:
-          type: integer
-          format: int32
-        numberOfElements:
-          type: integer
-          format: int32
-        pageable:
-          $ref: '#/components/schemas/Pageable'
-        size:
-          type: integer
-          format: int32
-        sort:
-          $ref: '#/components/schemas/Sort'
-        totalElements:
-          type: integer
-          format: int64
-        totalPages:
-          type: integer
-          format: int32
-    ResponseModel:
-      title: ResponseModel
-      type: object
-      properties:
-        resultDescription:
-          type: string
-    Sort:
-      title: Sort
-      type: object
-      properties:
-        empty:
-          type: boolean
-        sorted:
-          type: boolean
-        unsorted:
-          type: boolean
+definitions:
+  CapacityModel:
+    type: object
+    properties:
+      maxGuests:
+        type: integer
+        format: int32
+      minGuests:
+        type: integer
+        format: int32
+    title: CapacityModel
+  CatererListResponseModel:
+    type: object
+    properties:
+      caterers:
+        $ref: '#/definitions/Page'
+      resultDescription:
+        type: string
+    title: CatererListResponseModel
+  CatererModel:
+    type: object
+    properties:
+      capacity:
+        $ref: '#/definitions/CapacityModel'
+      contact:
+        $ref: '#/definitions/ContactModel'
+      id:
+        type: string
+      links:
+        $ref: '#/definitions/Links'
+      location:
+        $ref: '#/definitions/LocationModel'
+      name:
+        type: string
+    title: CatererModel
+  CatererRequestModel:
+    type: object
+    properties:
+      capacity:
+        $ref: '#/definitions/CapacityModel'
+      contact:
+        $ref: '#/definitions/ContactModel'
+      location:
+        $ref: '#/definitions/LocationModel'
+      name:
+        type: string
+    title: CatererRequestModel
+  CatererResponseModel:
+    type: object
+    properties:
+      caterer:
+        $ref: '#/definitions/CatererModel'
+      resultDescription:
+        type: string
+    title: CatererResponseModel
+  ContactModel:
+    type: object
+    properties:
+      emailAddress:
+        type: string
+      mobileNumber:
+        type: string
+      phoneNumber:
+        type: string
+    title: ContactModel
+  Links:
+    type: object
+    properties:
+      empty:
+        type: boolean
+    title: Links
+  LocationModel:
+    type: object
+    properties:
+      cityName:
+        type: string
+      postalCode:
+        type: string
+      streetNameNumber:
+        type: string
+    title: LocationModel
+  Pageable:
+    type: object
+    properties:
+      offset:
+        type: integer
+        format: int64
+      pageNumber:
+        type: integer
+        format: int32
+      pageSize:
+        type: integer
+        format: int32
+      paged:
+        type: boolean
+      sort:
+        $ref: '#/definitions/Sort'
+      unpaged:
+        type: boolean
+    title: Pageable
+  Page:
+    type: object
+    properties:
+      content:
+        type: array
+        items:
+          $ref: '#/definitions/CatererModel'
+      empty:
+        type: boolean
+      first:
+        type: boolean
+      last:
+        type: boolean
+      number:
+        type: integer
+        format: int32
+      numberOfElements:
+        type: integer
+        format: int32
+      pageable:
+        $ref: '#/definitions/Pageable'
+      size:
+        type: integer
+        format: int32
+      sort:
+        $ref: '#/definitions/Sort'
+      totalElements:
+        type: integer
+        format: int64
+      totalPages:
+        type: integer
+        format: int32
+    title: Page«CatererModel»
+  ResponseModel:
+    type: object
+    properties:
+      resultDescription:
+        type: string
+    title: ResponseModel
+  Sort:
+    type: object
+    properties:
+      empty:
+        type: boolean
+      sorted:
+        type: boolean
+      unsorted:
+        type: boolean
+    title: Sort
