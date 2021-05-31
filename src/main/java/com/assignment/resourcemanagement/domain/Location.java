@@ -17,4 +17,8 @@ public class Location implements Serializable {
   private String streetNameNumber;
 
   private String postalCode;
+
+  public void setCityName(String cityName) {
+    this.cityName = cityName.toLowerCase();
+  }
 }

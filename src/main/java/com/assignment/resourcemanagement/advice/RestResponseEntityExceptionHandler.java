@@ -101,7 +101,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
       message.message = error;
       message.path = path;
 
-      return new ResponseEntity<>(message, new HttpHeaders(), status);
+      return new ResponseEntity<>(Collections.singletonMap("response",message), new HttpHeaders(), status);
     }
   }
 }

@@ -42,13 +42,13 @@ public class ResourceManagementConfig extends AcceptHeaderLocaleResolver
 
   @Autowired private MessageSource messageSource;
 
-  @Value("${redis.host:localhost}")
+  @Value("${redis.host:redis}")
   private String redisHost;
 
-  @Value("${redis.port:6379}")
+  /*@Value("${redis.port:6379}")
   private Integer redisPort;
-
-  @Value("${kafka.host:kafka}")
+*/
+  @Value("${kafka.host:kafka-service}")
   private String kafkaHost;
 
   @Value("${kafka.port:9092}")

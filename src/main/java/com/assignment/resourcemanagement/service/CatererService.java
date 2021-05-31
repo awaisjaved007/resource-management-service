@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface CatererService {
-  void save(Caterer caterer);
+  Caterer save(Caterer caterer);
 
   Caterer getCatererByNameOrId(String nameOrId);
 

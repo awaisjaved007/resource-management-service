@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.RedisConnectionFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +33,9 @@ public class CatererServiceImpl implements CatererService {
   @Value("${caterer.city.name.regex}")
   private String regex;
 
+  @Value("${redis.city.name.key:CITY}")
+  private String redisCityNameKey;
+
   @Value("${redis.is.enabled:false}")
   private Boolean isRedisEnabled;
 
@@ -47,13 +51,15 @@ public class CatererServiceImpl implements CatererService {
 
   @Override
   @Transactional
-  public void save(Caterer caterer) {
+  public Caterer save(Caterer caterer) {
 
     validateCaterer(caterer);
 
     caterer = this.catererRepository.save(caterer);
 
     this.notificationStreamWriter.sentNotification(caterer);
+
+    return caterer;
   }
 
   private void validateCaterer(Caterer caterer) {
@@ -66,7 +72,7 @@ public class CatererServiceImpl implements CatererService {
     }
 
     Optional<Caterer> catererOptional =
-        this.catererRepository.findByIdOrName(caterer.getName(), caterer.getName());
+        this.catererRepository.findByIdOrNameIgnoreCase(caterer.getName(), caterer.getName());
 
     if (catererOptional.isPresent()) {
       throw new InvalidDataException(
@@ -77,7 +83,7 @@ public class CatererServiceImpl implements CatererService {
   @Override
   @Transactional(readOnly = true)
   public Caterer getCatererByNameOrId(String nameOrId) {
-    Optional<Caterer> caterer = this.catererRepository.findByIdOrName(nameOrId, nameOrId);
+    Optional<Caterer> caterer = this.catererRepository.findByIdOrNameIgnoreCase(nameOrId, nameOrId);
     if (caterer.isPresent()) {
       return caterer.get();
     } else {
@@ -89,14 +95,19 @@ public class CatererServiceImpl implements CatererService {
   @Override
   @Transactional(readOnly = true)
   public Page<Caterer> getCaterersByCityName(String cityName, Pageable pageable) {
-    Page<Caterer> caterers;
+    cityName = cityName.toLowerCase();
+    Page<Caterer> caterers = null;
     if (isRedisEnabled) {
 
-      caterers = getCaterersFromRedis(cityName, pageable);
+      try {
+        caterers = getCaterersFromRedis(cityName, pageable);
+      } catch (RedisConnectionFailureException e) {
+        LOGGER.error("Redis connection is not established [" + e.getMessage() + "]");
+      }
+    }
+    if (caterers == null) {
 
-    } else {
-
-      caterers = this.catererRepository.findAllByLocation_CityName(cityName, pageable);
+      caterers = this.catererRepository.findAllByLocation_CityNameIgnoreCase(cityName, pageable);
       if (caterers.getContent().size() == 0) {
 
         throw new InvalidDataException("message.getCaterersByCityName.invalid.city.name");
@@ -107,18 +118,18 @@ public class CatererServiceImpl implements CatererService {
   }
 
   private Page<Caterer> getCaterersFromRedis(String cityName, Pageable pageable)
-  {
+      throws RedisConnectionFailureException {
     Page<Caterer> caterers;
-    caterers = this.redisRepository.findByCityName("CITY", cityName, pageable);
+    caterers = this.redisRepository.findByCityName(redisCityNameKey, cityName, pageable);
 
     if (caterers.getContent().size() == 0) {
 
-      List<Caterer> dbCaterers = this.catererRepository.findAllByLocation_CityName(cityName);
+      List<Caterer> dbCaterers = this.catererRepository.findAllByLocation_CityNameIgnoreCase(cityName);
 
       if (dbCaterers.size() > 0) {
 
-        this.redisRepository.save("CITY", cityName, dbCaterers);
-        caterers = this.redisRepository.findByCityName("CITY", cityName, pageable);
+        this.redisRepository.save(redisCityNameKey, cityName, dbCaterers);
+        caterers = this.redisRepository.findByCityName(redisCityNameKey, cityName, pageable);
 
       } else {
 

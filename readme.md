@@ -41,5 +41,6 @@ To access
 
 
 ### Extra command
-kubectl create configmap rms-config --from-file=/opt/company/conf/resource-management
+kubectl create configmap rms-config --from-file=/opt/company/conf/resource-management/application.properties
 kubectl get configmap rms-config -o yaml     -- created a rms-config file and placed all data
+kubectl exec --stdin --tty podid -- /bin/bash

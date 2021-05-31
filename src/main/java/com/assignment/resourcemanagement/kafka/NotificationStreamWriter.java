@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -20,9 +21,16 @@ public class NotificationStreamWriter {
   @Value("${resource.management.topic.name}")
   private String inventoryResourceTopicName;
 
+  @Value("${resource.management.key:group_id}")
+  private String inventoryResourceKey;
+
   public void sentNotification(Caterer caterer) {
     logger.info("Sending Json Serializer : {}", caterer);
     logger.info("--------------------------------");
-    resourceInfoKafkaTemplate.send(inventoryResourceTopicName, caterer);
+    try {
+      resourceInfoKafkaTemplate.send(inventoryResourceTopicName, caterer);
+    } catch (Exception e) {
+      logger.error("Error in kafka occurred: [" + e.getMessage() + "]");
+    }
   }
 }

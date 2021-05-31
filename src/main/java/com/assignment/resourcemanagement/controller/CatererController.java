@@ -1,5 +1,6 @@
 package com.assignment.resourcemanagement.controller;
 
+import com.assignment.resourcemanagement.exception.InvalidDataException;
 import com.assignment.resourcemanagement.handler.CatererHandler;
 import com.assignment.resourcemanagement.model.CatererListResponseModel;
 import com.assignment.resourcemanagement.model.CatererRequestModel;
@@ -22,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Positive;
 
 @Api(value = "REST APIs for Caterers")
 @Validated
@@ -48,7 +48,7 @@ public class CatererController {
 
     ResponseModel responseModel = this.catererHandler.save(catererModel);
 
-    return ResponseEntity.ok(responseModel);
+    return ResponseEntity.status(HttpStatus.CREATED).body(responseModel);
   }
 
   @GetMapping(value = "{nameOrId}", produces = mediaTypeVersion)
@@ -56,16 +56,22 @@ public class CatererController {
 
     CatererResponseModel responseModel = this.catererHandler.getCatererByNameOrId(nameOrId);
 
-    return ResponseEntity.status(HttpStatus.CREATED).body(responseModel);
+    return ResponseEntity.status(HttpStatus.OK).body(responseModel);
   }
 
   @GetMapping(value = "all/{cityName}", produces = mediaTypeVersion)
   public ResponseEntity<CatererListResponseModel> getCaterersListByCityName(
       @PathVariable String cityName,
-      @RequestParam(value = "page") @Positive(message = "page.number.is.invalid") int page,
-      @RequestParam(value = "size") @Positive(message = "page.size.is.invalid") int size) {
+      @RequestParam(value = "page") int page,
+      @RequestParam(value = "size", required = false, defaultValue = "0") Integer size) {
 
-    Pageable paging = PageRequest.of(page-1, size == 0 ? defaultPageSize : size);
+    if (page < 1) {
+      throw new InvalidDataException("page.number.is.invalid");
+    }
+    if (size != null && size < 0) {
+      throw new InvalidDataException("page.size.is.invalid");
+    }
+    Pageable paging = PageRequest.of(page - 1, size == null || size == 0 ? defaultPageSize : size);
     ResponseModel responseModel = this.catererHandler.getCaterersByCityName(cityName, paging);
 
     return ResponseEntity.ok((CatererListResponseModel) responseModel);

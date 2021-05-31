@@ -19,6 +19,9 @@ public final class ConsumerService {
   @Value("${redis.is.enabled:false}")
   private Boolean isRedisEnabled;
 
+  @Value("${redis.city.name.key:CITY}")
+  private String redisCityNameKey;
+
   @Autowired
   public ConsumerService(final RedisRepository redisRepository) {
     this.redisRepository = redisRepository;
@@ -31,11 +34,11 @@ public final class ConsumerService {
       try {
 
         List<Caterer> caterers =
-            this.redisRepository.findByCityName("CITY", caterer.getLocation().getCityName());
+            this.redisRepository.findByCityName(redisCityNameKey, caterer.getLocation().getCityName());
 
         caterers.add(caterer);
 
-        this.redisRepository.save("CITY", caterer.getLocation().getCityName(), caterers);
+        this.redisRepository.save(redisCityNameKey, caterer.getLocation().getCityName(), caterers);
 
       } catch (Exception e) {
         LOGGER.error("Kafka Consumer[" + e.getMessage() + "]");

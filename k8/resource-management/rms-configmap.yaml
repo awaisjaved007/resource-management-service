@@ -1,6 +1,6 @@
 apiVersion: v1
 data:
-  application.properties: |-
+  application.properties: |
     ############# Application config ####################
     server.port=8013
     spring.application.name=resource-management
@@ -20,6 +20,7 @@ data:
 
     ###################KAKFA config###############
     resource.management.topic.name=resource-management-topic
+    resource.management.key=group_id
     kafka.host=kafka-service
     kafka.port=9092
 
@@ -35,13 +36,13 @@ data:
     redis.host=redis
     redis.port=6379
     redis.is.enabled=true
-
+    redis.city.name.key=CITY
     ################## Get Api Page Config #########
     caterer.get.city.name.api.page.size.default=5
 kind: ConfigMap
 metadata:
-  creationTimestamp: "2021-05-27T01:29:53Z"
+  creationTimestamp: "2021-05-30T10:48:06Z"
   name: rms-config
   namespace: default
-  resourceVersion: "118081"
-  uid: 27d48c39-40e8-4296-905f-c728e81a58f6
+  resourceVersion: "45701"
+  uid: cc5ea5c9-4b02-4944-9c55-b52e3d795c6a

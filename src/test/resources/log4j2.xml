@@ -12,8 +12,8 @@
         </Console>
 
         <!-- Rolling File Appender -->
-        <RollingFile name="FileAppender" fileName="/var/company/log/resource-management/resource-management.log"
-                     filePattern="/var/company/log/resource-management/log/resource-management-%d{yyyy-MM-dd}-%i.log">
+        <RollingFile name="FileAppender" fileName="/var/company/log/resource-management-test/resource-management.log"
+                     filePattern="/var/company/log/resource-management-test/resource-management-%d{yyyy-MM-dd}-%i.log">
             <PatternLayout>
                 <Pattern>${LOG_PATTERN}</Pattern>
             </PatternLayout>

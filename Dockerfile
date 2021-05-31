@@ -1,4 +1,4 @@
-FROM openjdk:8-jre-alpine
+FROM adoptopenjdk/openjdk11
 ADD target/*.jar /app/
 WORKDIR /app/
 RUN mv *.jar startup.jar

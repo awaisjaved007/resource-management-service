@@ -6,7 +6,6 @@ metadata:
   labels:
     app: kafka-service
 spec:
-  type: NodePort
   selector:
     app: kafka-service
   ports:

@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CatererRepository extends MongoRepository<Caterer, String> {
-  Optional<Caterer> findByIdOrName(String id, String name);
+  Optional<Caterer> findByIdOrNameIgnoreCase(String id, String name);
 
-  Page<Caterer> findAllByLocation_CityName(String cityName, Pageable pageable);
+  Page<Caterer> findAllByLocation_CityNameIgnoreCase(String cityName, Pageable pageable);
 
-  List<Caterer> findAllByLocation_CityName(String cityName);
+  List<Caterer> findAllByLocation_CityNameIgnoreCase(String cityName);
 }

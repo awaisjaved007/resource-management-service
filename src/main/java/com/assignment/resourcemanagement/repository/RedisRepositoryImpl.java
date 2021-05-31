@@ -16,7 +16,7 @@ import java.util.List;
 
 @Repository
 public class RedisRepositoryImpl implements RedisRepository {
-	private static final Logger LOGGER = LoggerFactory.getLogger(RedisRepositoryImpl.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(RedisRepositoryImpl.class);
 
   private final RedisTemplate<String, Caterer> redisTemplate;
 
@@ -30,11 +30,12 @@ public class RedisRepositoryImpl implements RedisRepository {
     this.redisTemplate.opsForHash().put(key, cityName, catererList);
   }
 
-  public List<Caterer>findByCityName(String key, String cityName){
+  @Override
+  public List<Caterer> findByCityName(String key, String cityName) {
     HashOperations<String, String, List<Caterer>> hashOperations = this.redisTemplate.opsForHash();
     List<Caterer> cachedCaterers = new LinkedList<>();
     if (hashOperations.hasKey(key, cityName)) {
-      cachedCaterers =  hashOperations.get(key, cityName);
+      cachedCaterers = hashOperations.get(key, cityName);
     }
     return cachedCaterers;
   }
