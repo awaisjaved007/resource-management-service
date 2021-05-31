@@ -13,32 +13,32 @@ import javax.validation.constraints.Size;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CatererRequestModel implements IModel {
+public class CatererRequest implements Caterer {
 
   @Size(min = 1, max = 255, message = "message.request.body.name.length")
   @NotNull(message = "message.request.body.name.not.null")
   private String name;
 
-  @NotNull(message = "message.request.body.capacity.not.null")
+  @NotNull(message = "message.request.body.capacityDocument.not.null")
   private @Valid CapacityModel capacity;
 
   @NotNull(message = "message.request.body.location.not.null")
-  private @Valid LocationModel location;
+  private @Valid AddressImpl address;
 
-  @NotNull(message = "message.request.body.contact.not.null")
+  @NotNull(message = "message.request.body.contactDocument.not.null")
   private @Valid ContactModel contact;
 
   @Data
   @JsonIgnoreProperties(ignoreUnknown = true)
-  public static class CapacityModel {
+  public static class CapacityModel implements Capacity {
 
-    @NotNull(message = "message.request.body.capacity.minGuests.not.null")
-    @Positive(message = "message.request.body.capacity.minGuests.min.value")
-    private Integer minGuests;
+    @NotNull(message = "message.request.body.capacityDocument.minGuests.not.null")
+    @Positive(message = "message.request.body.capacityDocument.minGuests.min.value")
+    private int minGuests;
 
-    @NotNull(message = "message.request.body.capacity.maxGuests.not.null")
-    @Positive(message = "message.request.body.capacity.maxGuests.min.value")
-    private Integer maxGuests;
+    @NotNull(message = "message.request.body.capacityDocument.maxGuests.not.null")
+    @Positive(message = "message.request.body.capacityDocument.maxGuests.min.value")
+    private int maxGuests;
 
     @Override
     public String toString() {
@@ -48,18 +48,21 @@ public class CatererRequestModel implements IModel {
 
   @Data
   @JsonIgnoreProperties(ignoreUnknown = true)
-  public static class ContactModel {
+  public static class ContactModel implements Contact {
     private String phoneNumber;
 
-    @Size(min = 5, max = 20, message = "message.request.body.contact.mobileNumber.length.invalid")
-    @NotNull(message = "message.request.body.contact.mobileNumber.not.null")
+    @Size(
+        min = 5,
+        max = 20,
+        message = "message.request.body.contactDocument.mobileNumber.length.invalid")
+    @NotNull(message = "message.request.body.contactDocument.mobileNumber.not.null")
     private String mobileNumber;
 
-    @NotNull(message = "message.request.body.contact.emailAddress.not.null")
+    @NotNull(message = "message.request.body.contactDocument.emailAddress.not.null")
     @Pattern(
         regexp = "^.+@.+\\..+$",
-        message = "message.request.body.contact.emailAddress.pattern.invalid")
-    private String emailAddress;
+        message = "message.request.body.contactDocument.emailAddress.pattern.invalid")
+    private String email;
 
     @Override
     public String toString() {
@@ -71,7 +74,7 @@ public class CatererRequestModel implements IModel {
           + mobileNumber
           + '\''
           + ", emailAddress='"
-          + emailAddress
+          + email
           + '\''
           + '}';
     }
@@ -79,27 +82,27 @@ public class CatererRequestModel implements IModel {
 
   @Data
   @JsonIgnoreProperties(ignoreUnknown = true)
-  public static class LocationModel {
+  public static class AddressImpl implements Address {
 
     @NotNull(message = "message.request.body.location.cityName.not.null")
     @Size(min = 1, max = 255, message = "message.request.body.location.cityName.length")
-    private String cityName;
+    private String city;
 
     @NotNull(message = "message.request.body.location.streetNameNumber.not.null")
     @Size(min = 1, max = 255, message = "message.request.body.location.streetNameNumber.length")
-    private String streetNameNumber;
+    private String street;
 
     private String postalCode;
 
     @Override
     public String toString() {
-      return "LocationModel{"
+      return "AddressImpl{"
           + "cityName='"
-          + cityName
+          + city
           + '\''
           + ", streetNameNumber='"
-          + streetNameNumber
-          + '\''
+          + street
+          + +'\''
           + ", postalCode='"
           + postalCode
           + '\''
@@ -109,15 +112,15 @@ public class CatererRequestModel implements IModel {
 
   @Override
   public String toString() {
-    return "CatererRequestModel{"
+    return "CatererRequest{"
         + "name='"
         + name
         + '\''
-        + ", capacity="
+        + ", capacityDocument="
         + capacity
-        + ", location="
-        + location
-        + ", contact="
+        + ", address="
+        + address
+        + ", contactDocument="
         + contact
         + '}';
   }
