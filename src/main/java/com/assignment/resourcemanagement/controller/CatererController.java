@@ -1,7 +1,7 @@
 package com.assignment.resourcemanagement.controller;
 
-import com.assignment.resourcemanagement.boundaries.CatererInteractor;
 import com.assignment.resourcemanagement.api.reqs.CatererRequest;
+import com.assignment.resourcemanagement.boundaries.CatererInteractor;
 import com.assignment.resourcemanagement.boundaries.PersistedCaterer;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,10 +44,10 @@ public class CatererController {
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
-  @GetMapping(value = "{id}")
-  public ResponseEntity<PersistedCaterer> getCatererByNameOrId(@PathVariable String id) {
+  @GetMapping(value = "{name}")
+  public ResponseEntity<PersistedCaterer> getCatererById(@PathVariable String name) {
 
-    PersistedCaterer persistedCaterer = catererInteractor.getCatererById(id);
+    PersistedCaterer persistedCaterer = catererInteractor.getCatererByName(name);
 
     return ResponseEntity.status(HttpStatus.OK).body(persistedCaterer);
   }
