@@ -34,6 +34,10 @@ To access swagger ui:   http://{Place ip of rms-service}:30008/resource-manageme
 
 ###Swagger file is placed in resources folder.
 
+###Missing Points
+Hateos 
+Integration Tests
+
 To access 
 
 
