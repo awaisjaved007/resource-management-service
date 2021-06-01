@@ -13,10 +13,10 @@ public class KafkaBroker implements MessageBroker {
 
   private static final Logger LGR = LoggerFactory.getLogger(KafkaBroker.class);
 
-  private final KafkaTemplate<String, String> resourceInfoKafkaTemplate;
+  private final KafkaTemplate<String, Object> resourceInfoKafkaTemplate;
 
   @Autowired
-  public KafkaBroker(KafkaTemplate<String, String> resourceInfoKafkaTemplate) {
+  public KafkaBroker(KafkaTemplate<String, Object> resourceInfoKafkaTemplate) {
     this.resourceInfoKafkaTemplate = resourceInfoKafkaTemplate;
   }
 
@@ -26,7 +26,7 @@ public class KafkaBroker implements MessageBroker {
     LGR.info("Sending Json Serializer : {}", payload);
     LGR.info("--------------------------------");
     try {
-      resourceInfoKafkaTemplate.send(topic, payload+"");
+      resourceInfoKafkaTemplate.send(topic, payload);
     } catch (Exception e) {
       LGR.error("Error in broker occurred", e);
     }

@@ -1,9 +1,9 @@
 package com.assignment.resourcemanagement.config;
 
+import com.assignment.resourcemanagement.broker.CatererSerializer;
 import com.assignment.resourcemanagement.utils.CommonUtils;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.web.servlet.DispatcherServletAutoConfiguration;
@@ -68,8 +68,8 @@ public class ResourceManagementConfig extends AcceptHeaderLocaleResolver
 
     configProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaHost + ":" + kafkaPort);
     configProps.put(ConsumerConfig.GROUP_ID_CONFIG, "group_id");
-    configProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringSerializer.class);
-    configProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringSerializer.class);
+    configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, CatererSerializer.class);
+    configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, CatererSerializer.class);
 
     return new DefaultKafkaProducerFactory<>(configProps);
   }

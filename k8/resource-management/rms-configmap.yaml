@@ -15,6 +15,7 @@ data:
     ############# CORS config ####################
     #comma separated origin list or star(*) to allow all
     cors.allowedorigins=*
+    cors.enable=true
     ###################KAKFA config###############
     resource.management.topic.name=resource-management-topic
     kafka.host=kafka-service
@@ -28,8 +29,8 @@ data:
     caterer.city.name.regex=^[a-zA-Z\s]+$
 kind: ConfigMap
 metadata:
-  creationTimestamp: "2021-05-31T23:26:45Z"
+  creationTimestamp: "2021-06-01T08:37:46Z"
   name: rms-config
   namespace: default
-  resourceVersion: "78244"
-  uid: 321c45a4-e4ed-4a65-a524-92c17affef76
+  resourceVersion: "84780"
+  uid: d08dde07-13c8-4ee9-96ca-cd69b411b76d
